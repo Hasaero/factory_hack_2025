@@ -11,19 +11,19 @@ st.set_page_config(layout="wide")
 # Minus
 matplotlib.rcParams['axes.unicode_minus'] = False
 
-@st.cache_data
-def fontRegistered():
-    font_dirs = [os.getcwd() + '/customFonts']
-    font_files = fm.findSystemFonts(fontpaths=font_dirs)
+# @st.cache_data
+# def fontRegistered():
+#     font_dirs = [os.getcwd() + '/customFonts']
+#     font_files = fm.findSystemFonts(fontpaths=font_dirs)
 
-    for font_file in font_files:
-        fm.fontManager.addfont(font_file)
-    fm._load_fontmanager(try_read_cache=False)
+#     for font_file in font_files:
+#         fm.fontManager.addfont(font_file)
+#     fm._load_fontmanager(try_read_cache=False)
     
-fontRegistered()
-fontNames = [f.name for f in fm.fontManager.ttflist]
-fontname = st.selectbox("폰트 선택", fontNames)
-plt.rc('font', family=fontname)
+# fontRegistered()
+# fontNames = [f.name for f in fm.fontManager.ttflist]
+# fontname = st.selectbox("폰트 선택", fontNames)
+# plt.rc('font', family=fontname)
 
 # 상단에 이미지 추가
 # image = Image.open("../plot/image.png")  # 업로드한 이미지 경로
