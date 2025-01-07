@@ -6,15 +6,10 @@ import matplotlib.font_manager as fm
 from Hack_preprocess import *
 from Hack_modeling import *
 from pathlib import Path
-
-# 경로를 Path로 정의
-font_path = Path('malgun.ttf')  # 운영 체제에 따라 적절한 경로 타입으로 설정
-
+# 전체 화면 설정
+st.set_page_config(layout="wide")
 # Minus
 matplotlib.rcParams['axes.unicode_minus'] = False
-
-url = 'https://raw.githubusercontent.com/Hasaero/factory_hack_2025/master/font/malgun.ttf'
-response = requests.get(url)
 
 @st.cache_data
 def fontRegistered():
@@ -24,9 +19,11 @@ def fontRegistered():
     for font_file in font_files:
         fm.fontManager.addfont(font_file)
     fm._load_fontmanager(try_read_cache=False)
-
-# 전체 화면 설정
-st.set_page_config(layout="wide")
+    
+fontRegistered()
+fontNames = [f.name for f in fm.fontManager.ttflist]
+fontname = st.selectbox("폰트 선택", fontNames)
+plt.rc('font', family=fontname)
 
 # 상단에 이미지 추가
 # image = Image.open("../plot/image.png")  # 업로드한 이미지 경로
