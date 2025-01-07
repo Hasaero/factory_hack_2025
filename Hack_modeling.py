@@ -181,7 +181,7 @@ def inference(demo_df):
         y = grouped[target].first().values
         serials = grouped['SerialNo'].first().values  # SerialNo 리스트
     
-        mv_clf = load_learner(f"https://raw.githubusercontent.com/Hasaero/factory_hack_2025/master/{target}_inception.pkl") 
+        mv_clf = load_learner(f"https://raw.githubusercontent.com/Hasaero/factory_hack_2025/master/models/{target}_inception.pkl") 
         
         # 모델 로드
         X_test = X[splits[1]]  # 테스트 데이터
