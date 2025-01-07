@@ -5,9 +5,11 @@ import matplotlib.font_manager as fm
 
 from Hack_preprocess import *
 from Hack_modeling import *
+from pathlib import Path
 
-# font Setting
-plt.rc('font', family='Malgun Gothic')
+# 경로를 Path로 정의
+font_path = Path('malgun.ttf')  # 운영 체제에 따라 적절한 경로 타입으로 설정
+
 # Minus
 matplotlib.rcParams['axes.unicode_minus'] = False
 
