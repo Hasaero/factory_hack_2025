@@ -2,13 +2,6 @@ import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
 
-import numpy as np
-import torch
-
-from PIL import Image
-from tsai.inference import load_learner
-from sklearn.metrics import classification_report
-
 from Hack_preprocess import *
 from Hack_modeling import *
 
@@ -17,33 +10,23 @@ plt.rc('font', family='Malgun Gothic')
 # Minus
 matplotlib.rcParams['axes.unicode_minus'] = False
 
-# def add_result(df):
-#     result_mapping = {
-#         '그루브깊이': ['그루브깊이1번_Result', '그루브깊이2번_Result', '그루브깊이3번_Result', '그루브깊이4번_Result', '그루브깊이5번_Result'],
-#         '위치도': ['위치도1번_Result', '위치도2번_Result', '위치도3번_Result', '위치도4번_Result', '위치도5번_Result'],
-#         '진원도': ['진원도1번_Result', '진원도2번_Result', '진원도3번_Result', '진원도4번_Result', '진원도5번_Result'],
-#         '그루브경': ['그루브경1번_Result', '그루브경2번_Result', '그루브경3번_Result', '그루브경4번_Result', '그루브경5번_Result']
-#     }
+url = 'https://raw.githubusercontent.com/Hasaero/factory_hack_2025/master/malgun.ttf'
+response = requests.get(url)
 
-#     # ***_Result 열 4개 추가
-#     for new_col, related_cols in result_mapping.items():
-#         df[f'{new_col}_Result'] = df[related_cols].apply(lambda x: 0 if (x == 0).any() else 1, axis=1)
-    
-#     return df
+# 현재 디렉토리에 ttf 파일을 저장합니다.
+with open('malgun.ttf', 'wb') as out_file:
+    out_file.write(response.content)
 
-# # 3. 길이 조정 함수 정의
-# def adjust_length(data, target_len):
-#     current_len = len(data)
-#     if current_len < target_len:
-#         # 패딩: 부족한 부분을 0으로 채움
-#         return np.pad(data, ((0, target_len - current_len), (0, 0)), constant_values=0)
-#     elif current_len > target_len:
-#         # 잘라내기: 앞부분만 사용
-#         return data[:target_len]
-#     else:
-#         # 이미 target_len과 같음
-#         return data
-    
+# 이제 파일은 로컬 파일 시스템에 저장되어 있으므로 ft2font.FT2Font에서 사용할 수 있습니다.
+font_path = os.path.abspath('BMDOHYEON_ttf.ttf')
+fm.fontManager.addfont(font_path)
+
+# 위 코드는 캐시된 FontManager를 무시하고 새로운 것을 불러오도록 설정합니다.
+fm._load_fontmanager(try_read_cache=False)
+
+# 이제 'BM Dohyeon' 폰트를 사용할 수 있게 됐습니다.
+plt.rc('font', family='BM Dohyeon')
+
 # 전체 화면 설정
 st.set_page_config(layout="wide")
 
