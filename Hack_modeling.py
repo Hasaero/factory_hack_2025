@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-
 import numpy as np
 import pandas as pd
 import os
@@ -19,7 +18,6 @@ def set_seed(seed: int):
     os.environ["PYTHONHASHSEED"] = str(seed)
 
     return
-
 
 # 3. 길이 조정 함수 정의
 def adjust_length(data, target_len):
@@ -81,7 +79,6 @@ class F1ForZero(Metric):
     @property
     def value(self):
         return f1_score(self.y_true, self.y_pred, labels=[0], average=None)[0]
-
 
 
 def train(raw_df):
@@ -182,7 +179,21 @@ def inference(demo_df):
         y = grouped[target].first().values
         serials = grouped['SerialNo'].first().values  # SerialNo 리스트
         # 3. 모델 로드 및 예측
-        mv_clf = load_learner(f"models/{target}_inception.pkl")  # 모델 로드
+        # 모델 파일 경로 생성 함수
+        def get_model_path(target):
+            # 현재 파일 위치를 기준으로 절대 경로 생성
+            base_dir = Path(__file__).resolve().parent  # 현재 실행 중인 파일의 디렉토리
+            model_path = base_dir / "main" / "models" / f"{target}_inception.pkl"
+            return model_path
+
+        model_path = get_model_path(target)
+
+        # 모델 로드
+        if model_path.exists():
+            mv_clf = load_learner(model_path)
+        else:
+            raise FileNotFoundError(f"모델 파일을 찾을 수 없습니다: {model_path}")
+        
         X_test = X[splits[1]]  # 테스트 데이터
         y_test = y[splits[1]]  # 테스트 타겟값
         probas, _, preds = mv_clf.get_X_preds(X_test, y_test)  # 확률, 실제값, 예측값
@@ -194,28 +205,6 @@ def inference(demo_df):
     result_df = result_df.set_index(result_df["결과"]).drop(columns=['결과'])
 
     return result_df
-
-def visualize_result(result_df):
-
-    # 서브플롯 생성
-    fig, axes = plt.subplots(2, 3, figsize=(15, 10))
-    axes = axes.flatten()
-
-    # 각 결과에 대해 파이 차트 그리기
-    for i, ax in enumerate(axes):
-        result = result_df.iloc[i]
-        labels = ['불량', '정상']
-        sizes = [result['불량일 확률'], 100 - result['불량일 확률']]  # 불량일 확률, 정상 확률
-        colors = ['red', 'skyblue']
-
-        ax.pie(sizes, labels=labels, autopct='%1.1f%%', startangle=90, colors=colors)
-        ax.set_title(result['결과'])
-
-    # 전체 레이아웃 조정 및 출력
-    plt.tight_layout()
-    plt.show()
-    
-    return fig
 
 def visualize_result(result_df):
 
