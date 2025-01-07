@@ -181,7 +181,33 @@ def inference(demo_df):
         y = grouped[target].first().values
         serials = grouped['SerialNo'].first().values  # SerialNo 리스트
     
-        mv_clf = load_learner(f"https://raw.githubusercontent.com/Hasaero/factory_hack_2025/master/models/{target}_inception.pkl") 
+        # 모델 파일 다운로드 함수
+        def download_model(target):
+            # GitHub URL 설정 (파일 경로를 동적으로 생성)
+            base_url = "https://raw.githubusercontent.com/Hasaero/factory_hack_2025/main/models"
+            url = f"{base_url}/{target}_Result_inception.pkl"
+
+            # 모델 저장 경로 설정
+            model_dir = Path("models")
+            model_dir.mkdir(parents=True, exist_ok=True)  # 디렉토리 생성
+            model_path = model_dir / f"{target}_Result_inception.pkl"
+
+            # 모델 파일 다운로드
+            if not model_path.exists():
+                print(f"{model_path} 다운로드 중...")
+                response = requests.get(url)
+                response.raise_for_status()  # HTTP 오류 시 예외 발생
+                with open(model_path, "wb") as f:
+                    f.write(response.content)
+                print(f"{model_path} 다운로드 완료!")
+            else:
+                print(f"{model_path} 이미 존재합니다.")
+
+            return model_path
+
+        # 대상 모델 로드
+        model_path = download_model(target)
+        mv_clf = load_learner(model_path) 
         
         # 모델 로드
         X_test = X[splits[1]]  # 테스트 데이터
