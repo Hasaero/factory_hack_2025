@@ -19,7 +19,7 @@ with open('malgun.ttf', 'wb') as out_file:
     out_file.write(response.content)
 
 # 이제 파일은 로컬 파일 시스템에 저장되어 있으므로 ft2font.FT2Font에서 사용할 수 있습니다.
-font_path = os.path.abspath('malgun.ttf.ttf')
+font_path = os.path.abspath('malgun.ttf')
 fm.fontManager.addfont(font_path)
 
 # 위 코드는 캐시된 FontManager를 무시하고 새로운 것을 불러오도록 설정합니다.
