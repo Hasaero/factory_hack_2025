@@ -6,9 +6,11 @@ import pandas as pd
 import os
 import matplotlib.pyplot as plt
 import random
+import requests
 
 from tsai.basics import *
 from tsai.all import *
+from pathlib import Path
 
 from sklearn.metrics import classification_report, recall_score, precision_score, f1_score
 
@@ -179,7 +181,30 @@ def inference(demo_df):
         y = grouped[target].first().values
         serials = grouped['SerialNo'].first().values  # SerialNo 리스트
         # 3. 모델 로드 및 예측
-        mv_clf = load_learner(f"https://raw.githubusercontent.com/Hasaero/factory_hack_2025/master/models/{target}_inception.pkl")  # 모델 로드
+        def download_model(target, url):
+            # 다운로드 경로 설정
+            model_dir = Path("models")
+            model_dir.mkdir(parents=True, exist_ok=True)  # 디렉토리 생성
+            model_path = model_dir / f"{target}_inception.pkl"
+
+            # 모델 파일 다운로드
+            if not model_path.exists():
+                print(f"{model_path} 다운로드 중...")
+                response = requests.get(url)
+                response.raise_for_status()  # 오류 발생 시 예외 처리
+                with open(model_path, "wb") as f:
+                    f.write(response.content)
+                print(f"{model_path} 다운로드 완료!")
+            else:
+                print(f"{model_path} 이미 존재합니다.")
+
+            return model_path
+
+        url = f"https://raw.githubusercontent.com/Hasaero/factory_hack_2025/master/main/models/{target}_inception.pkl"
+
+        # 모델 다운로드 및 로드
+        model_path = download_model(target, url)
+        mv_clf = load_learner(model_path)  # 모델 로드
         X_test = X[splits[1]]  # 테스트 데이터
         y_test = y[splits[1]]  # 테스트 타겟값
         probas, _, preds = mv_clf.get_X_preds(X_test, y_test)  # 확률, 실제값, 예측값
