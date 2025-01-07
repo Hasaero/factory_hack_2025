@@ -13,23 +13,29 @@ font_path = Path('malgun.ttf')  # 운영 체제에 따라 적절한 경로 타�
 # Minus
 matplotlib.rcParams['axes.unicode_minus'] = False
 
-# Malgun Gothic 폰트 다운로드
-url = 'https://raw.githubusercontent.com/Hasaero/factory_hack_2025/master/font/malgun.ttf'
-response = requests.get(url)
+# 폰트 다운로드 및 캐싱
+@st.cache_data
+def download_and_set_font():
+    url = 'https://raw.githubusercontent.com/Hasaero/factory_hack_2025/master/font/malgun.ttf'
+    response = requests.get(url)
 
-# 로컬에 ttf 파일 저장
-font_file = Path('malgun.ttf')  # pathlib.Path 객체로 처리
-with font_file.open('wb') as out_file:
-    out_file.write(response.content)
+    # Streamlit 캐싱 디렉토리에 폰트 저장
+    font_dir = Path(st.__path__[0]) / "static" / "fonts"
+    font_dir.mkdir(parents=True, exist_ok=True)
+    font_path = font_dir / 'malgun.ttf'
 
-# 절대 경로 가져오기
-font_path = font_file.resolve()  # OS 독립적인 절대 경로
+    # 폰트 저장
+    with font_path.open('wb') as out_file:
+        out_file.write(response.content)
 
-# matplotlib에 폰트 추가
-fm.fontManager.addfont(str(font_path))
-fm._load_fontmanager(try_read_cache=False)
+    # matplotlib에 폰트 추가
+    fm.fontManager.addfont(str(font_path))
+    fm._load_fontmanager(try_read_cache=False)
+
+    return str(font_path)
 
 # 폰트 설정
+font_path = download_and_set_font()
 plt.rc('font', family='Malgun Gothic')
 
 # 전체 화면 설정
