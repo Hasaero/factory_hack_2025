@@ -11,7 +11,7 @@ plt.rc('font', family='Malgun Gothic')
 # Minus
 matplotlib.rcParams['axes.unicode_minus'] = False
 
-url = 'https://raw.githubusercontent.com/Hasaero/factory_hack_2025/master/malgun.ttf'
+url = 'https://raw.githubusercontent.com/Hasaero/factory_hack_2025/master/font/malgun.ttf'
 response = requests.get(url)
 
 # 현재 디렉토리에 ttf 파일을 저장합니다.
