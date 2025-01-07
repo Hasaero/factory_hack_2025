@@ -190,7 +190,7 @@ def inference(demo_df):
             # 모델 저장 경로 설정
             model_dir = Path("models")
             model_dir.mkdir(parents=True, exist_ok=True)  # 디렉토리 생성
-            model_path = model_dir / f"{target}_Result_inception.pkl"
+            model_path = model_dir / f"{target}_inception.pkl"
 
             # 모델 파일 다운로드
             if not model_path.exists():
