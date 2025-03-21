@@ -1,4 +1,4 @@
-# FACTORY HACK KOREA 2025 - Forbao
+# FACTORY HACK KOREA 2025
 
 ## 📌 Project Overview
 This project was developed for an **Industrial AI Hackathon** aimed at solving **manufacturing site issues**.  
